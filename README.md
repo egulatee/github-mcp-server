@@ -186,4 +186,3 @@ To upgrade to a new upstream release, bump `ARG UPSTREAM_VERSION` in the `Docker
 ## Related
 
 - Upstream: [github/github-mcp-server](https://github.com/github/github-mcp-server)
-- Consumer: [realestateanalyzorinfra/openclaw-operator#17](https://github.com/realestateanalyzorinfra/openclaw-operator/issues/17)

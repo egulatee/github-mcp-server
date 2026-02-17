@@ -1,0 +1,150 @@
+[
+  {
+    "name": "get_file_contents",
+    "description": "Get the contents of a file or directory from a GitHub repository"
+  },
+  {
+    "name": "list_branches",
+    "description": "List branches in a GitHub repository"
+  },
+  {
+    "name": "list_commits",
+    "description": "Get list of commits of a branch in a GitHub repository"
+  },
+  {
+    "name": "get_commit",
+    "description": "Get details for a commit from a GitHub repository"
+  },
+  {
+    "name": "create_branch",
+    "description": "Create a new branch in a GitHub repository"
+  },
+  {
+    "name": "push_files",
+    "description": "Push multiple files to a GitHub repository in a single commit"
+  },
+  {
+    "name": "create_or_update_file",
+    "description": "Create or update a single file in a GitHub repository"
+  },
+  {
+    "name": "delete_file",
+    "description": "Delete a file from a GitHub repository"
+  },
+  {
+    "name": "create_pull_request",
+    "description": "Create a new pull request in a GitHub repository"
+  },
+  {
+    "name": "list_pull_requests",
+    "description": "List pull requests in a GitHub repository"
+  },
+  {
+    "name": "pull_request_read",
+    "description": "Get information on a specific pull request in a GitHub repository"
+  },
+  {
+    "name": "pull_request_review_write",
+    "description": "Create and/or submit, delete a review of a pull request"
+  },
+  {
+    "name": "add_comment_to_pending_review",
+    "description": "Add a review comment to the requester's latest pending pull request review"
+  },
+  {
+    "name": "update_pull_request",
+    "description": "Update an existing pull request in a GitHub repository"
+  },
+  {
+    "name": "update_pull_request_branch",
+    "description": "Update the branch of a pull request with the latest changes from the base branch"
+  },
+  {
+    "name": "issue_read",
+    "description": "Get information about a specific issue in a GitHub repository"
+  },
+  {
+    "name": "issue_write",
+    "description": "Create a new or update an existing issue in a GitHub repository"
+  },
+  {
+    "name": "add_issue_comment",
+    "description": "Add a comment to a specific issue in a GitHub repository"
+  },
+  {
+    "name": "list_issues",
+    "description": "List issues in a GitHub repository"
+  },
+  {
+    "name": "list_issue_types",
+    "description": "List issue types for an organization"
+  },
+  {
+    "name": "sub_issue_write",
+    "description": "Add a sub-issue to a parent issue in a GitHub repository"
+  },
+  {
+    "name": "search_code",
+    "description": "Search for code across GitHub repositories using GitHub's code search"
+  },
+  {
+    "name": "search_repositories",
+    "description": "Find GitHub repositories by name, description, topics, or other metadata"
+  },
+  {
+    "name": "search_pull_requests",
+    "description": "Search for pull requests in GitHub repositories"
+  },
+  {
+    "name": "search_issues",
+    "description": "Search for issues in GitHub repositories"
+  },
+  {
+    "name": "search_users",
+    "description": "Find GitHub users by username, real name, or other profile information"
+  },
+  {
+    "name": "get_status",
+    "description": "Get the combined status for a specific ref in a GitHub repository"
+  },
+  {
+    "name": "get_me",
+    "description": "Get details of the authenticated GitHub user"
+  },
+  {
+    "name": "get_label",
+    "description": "Get a specific label from a repository"
+  },
+  {
+    "name": "fork_repository",
+    "description": "Fork a GitHub repository to your account or specified organization"
+  },
+  {
+    "name": "create_repository",
+    "description": "Create a new GitHub repository in your account or specified organization"
+  },
+  {
+    "name": "get_latest_release",
+    "description": "Get the latest release in a GitHub repository"
+  },
+  {
+    "name": "get_release_by_tag",
+    "description": "Get a specific release by its tag name in a GitHub repository"
+  },
+  {
+    "name": "list_releases",
+    "description": "List releases in a GitHub repository"
+  },
+  {
+    "name": "list_tags",
+    "description": "List git tags in a GitHub repository"
+  },
+  {
+    "name": "get_tag",
+    "description": "Get details about a specific git tag in a GitHub repository"
+  },
+  {
+    "name": "request_copilot_review",
+    "description": "Request a GitHub Copilot code review for a pull request"
+  }
+]

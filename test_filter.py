@@ -335,3 +335,46 @@ class TestInjectSyntheticTools:
         assert injected["name"] == "get_access_policy"
         assert "inputSchema" in injected
         assert "description" in injected
+
+
+# ---------------------------------------------------------------------------
+# tools.json manifest sync validation
+# ---------------------------------------------------------------------------
+
+
+class TestToolsManifest:
+    """Ensure tools.json stays in sync with ALL_TOOLS_DEFAULT in filter.py."""
+
+    def _load_manifest(self):
+        import pathlib
+        manifest_path = pathlib.Path(__file__).parent / "tools.json"
+        with manifest_path.open() as fh:
+            return json.load(fh)
+
+    def test_manifest_exists_and_is_valid_json(self):
+        manifest = self._load_manifest()
+        assert isinstance(manifest, list)
+        assert len(manifest) > 0
+
+    def test_every_manifest_entry_has_name_and_description(self):
+        for entry in self._load_manifest():
+            assert "name" in entry, f"Missing 'name' key in entry: {entry}"
+            assert "description" in entry, f"Missing 'description' key in entry: {entry}"
+            assert entry["name"].strip(), "Tool name must not be empty"
+            assert entry["description"].strip(), "Tool description must not be empty"
+
+    def test_manifest_names_match_all_tools_default(self):
+        manifest_names = {entry["name"] for entry in self._load_manifest()}
+        default_names = {
+            t.strip()
+            for t in f.ALL_TOOLS_DEFAULT.split(",")
+            if t.strip()
+        }
+        only_in_manifest = manifest_names - default_names
+        only_in_default = default_names - manifest_names
+        assert not only_in_manifest, (
+            f"tools.json has names not in ALL_TOOLS_DEFAULT: {sorted(only_in_manifest)}"
+        )
+        assert not only_in_default, (
+            f"ALL_TOOLS_DEFAULT has names not in tools.json: {sorted(only_in_default)}"
+        )

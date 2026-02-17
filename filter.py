@@ -58,6 +58,20 @@ if "GITHUB_TOOLS" not in os.environ:
     os.environ["GITHUB_TOOLS"] = ALL_TOOLS_DEFAULT
 
 # ---------------------------------------------------------------------------
+# Hardcoded blocked tools — cannot be overridden by any environment variable.
+# merge_pull_request is permanently blocked regardless of GITHUB_TOOLS.
+# ---------------------------------------------------------------------------
+BLOCKED_TOOLS: frozenset[str] = frozenset({"merge_pull_request"})
+
+# ---------------------------------------------------------------------------
+# Tool allowlist — built from GITHUB_TOOLS (already defaulted above).
+# A tools/call request is rejected if the tool name is not in this set.
+# ---------------------------------------------------------------------------
+ALLOWED_TOOLS: frozenset[str] = frozenset(
+    t.strip() for t in os.environ["GITHUB_TOOLS"].split(",") if t.strip()
+)
+
+# ---------------------------------------------------------------------------
 # Access-control configuration
 # ---------------------------------------------------------------------------
 ALLOWED_ORGS: list[str] = [
@@ -107,7 +121,24 @@ def check_message(msg: dict) -> bytes | None:
     if msg.get("method") != "tools/call":
         return None
 
-    args = msg.get("params", {}).get("arguments", {})
+    params = msg.get("params", {})
+    tool_name: str | None = params.get("name")
+
+    # Hard block: permanently forbidden tools regardless of GITHUB_TOOLS.
+    if tool_name in BLOCKED_TOOLS:
+        return make_error(
+            msg.get("id"),
+            f"Tool '{tool_name}' is permanently disabled",
+        )
+
+    # Allowlist enforcement: reject tools not in GITHUB_TOOLS.
+    if tool_name not in ALLOWED_TOOLS:
+        return make_error(
+            msg.get("id"),
+            f"Tool '{tool_name}' is not permitted",
+        )
+
+    args = params.get("arguments", {})
     owner: str | None = args.get("owner")
     repo: str | None = args.get("repo")
 

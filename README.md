@@ -123,11 +123,43 @@ The `filter.py` script sits between the MCP client and `github-mcp-server stdio`
 | `ALLOWED_ORGS`              | Comma-separated list of GitHub org/user names. Supports `fnmatch` globs (e.g. `myorg,partner-*`). |
 | `ALLOWED_REPOS`             | Comma-separated list of `owner/repo` patterns. Supports globs (e.g. `myorg/*`). |
 
-**Access-control logic:**
-- If neither `ALLOWED_ORGS` nor `ALLOWED_REPOS` is set, all org/repo access is permitted (rely on PAT scoping).
-- A tool call is allowed when the owner matches any `ALLOWED_ORGS` pattern **or** the full `owner/repo` matches any `ALLOWED_REPOS` pattern.
-- Tools with no owner/repo arguments (e.g. `get_me`) are always allowed.
-- `search_*` tools use free-text queries — org/repo filtering is not applied to their arguments.
+### Access-control logic
+
+1. **Pass-through mode** — if neither `ALLOWED_ORGS` nor `ALLOWED_REPOS` is set, all org/repo access is permitted (rely on PAT scoping).
+2. **Restricted mode** — when either variable is set:
+   - A call is **allowed** when the `owner` matches any `ALLOWED_ORGS` pattern **or** the full `owner/repo` matches any `ALLOWED_REPOS` pattern.
+   - A call that provides `repo` but **omits `owner`** is **rejected** — the owner is required for allowlist matching and an omitted owner is treated as a misconfiguration.
+   - Tools with no owner/repo arguments (e.g. `get_me`) are always allowed.
+3. `search_*` tools use free-text queries — org/repo filtering is not applied to their arguments; rely on PAT scoping for those.
+4. `merge_pull_request` is **permanently blocked** regardless of `GITHUB_TOOLS`.
+
+Pattern syntax follows Python [`fnmatch`](https://docs.python.org/3/library/fnmatch.html): `*` matches any sequence of characters, `?` matches a single character.
+
+### Recommended configuration patterns
+
+| Goal | Configuration |
+|------|--------------|
+| Restrict to a single org | `ALLOWED_ORGS=myorg` |
+| Restrict to specific repos | `ALLOWED_REPOS=myorg/app,myorg/infra` |
+| Restrict to org + wildcard repos | `ALLOWED_ORGS=myorg` / `ALLOWED_REPOS=myorg/*` |
+| Allow partner orgs by prefix | `ALLOWED_ORGS=myorg,partner-*` |
+| Lock down to one repo | `ALLOWED_REPOS=myorg/specific-repo` |
+
+### Synthetic tool: `get_access_policy`
+
+`filter.py` exposes a built-in `get_access_policy` tool that is **not forwarded to the upstream server** — it is handled locally by the filter itself. Calling it returns a JSON document describing the active policy:
+
+```json
+{
+  "mode": "restricted",
+  "allowed_orgs": ["myorg"],
+  "allowed_repos": [],
+  "allowed_tools": ["create_branch", "get_file_contents", "..."],
+  "blocked_tools": ["merge_pull_request"]
+}
+```
+
+`mode` is `"restricted"` when `ALLOWED_ORGS` or `ALLOWED_REPOS` is set, `"passthrough"` otherwise. This tool always works, even when the upstream server is unreachable, and bypasses the tool allowlist check so operators can inspect the policy at any time.
 
 ## Building Locally
 
